@@ -1,7 +1,8 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddProject<Projects.Store>("store");
-builder.AddProject<Projects.Products>("products")
-    .WithHttpEndpoint(port: 5200, name: "products");
+var products = builder.AddProject<Projects.Products>("products");
+
+builder.AddProject<Projects.Store>("store")
+    .WithReference(products);
 
 builder.Build().Run();

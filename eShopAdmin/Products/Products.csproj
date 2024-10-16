@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataEntities\DataEntities.csproj" />
+    <ProjectReference Include="..\..\ExampleApp.ServiceDefaults\ExampleApp.ServiceDefaults.csproj" />
   </ItemGroup>
 
   <ItemGroup>
