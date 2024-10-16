@@ -3,13 +3,12 @@ using Store.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<ProductService>();
+builder.AddServiceDefaults(); //adds aspire service defaults
+
 builder.Services.AddHttpClient<ProductService>(c =>
 {
     // var url = builder.Configuration["ProductEndpoint"] ?? throw new InvalidOperationException("ProductEndpoint is not set");
-    var url = "http://products";
-    
-    c.BaseAddress = new(url);
+    c.BaseAddress = new("https+http://products");
 });
 
 // Add services to the container.
@@ -34,4 +33,5 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
+app.MapDefaultEndpoints();
 app.Run();
