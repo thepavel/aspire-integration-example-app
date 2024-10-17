@@ -4,7 +4,7 @@ using Store.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults(); //adds aspire service defaults
-
+builder.Services.AddSingleton<ProductService>();
 builder.Services.AddHttpClient<ProductService>(c =>
 {
     // var url = builder.Configuration["ProductEndpoint"] ?? throw new InvalidOperationException("ProductEndpoint is not set");
@@ -16,6 +16,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
+app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -30,8 +31,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-app.MapRazorComponents<App>()
+app.MapRazorComponents<Store.Components.App>()
     .AddInteractiveServerRenderMode();
 
-app.MapDefaultEndpoints();
+
 app.Run();
