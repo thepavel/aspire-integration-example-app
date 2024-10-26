@@ -10,10 +10,7 @@ builder.AddApplicationServices();
 
 builder.Services.AddProblemDetails();
 
-builder.Services.AddDbContext<CatalogDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("sqlconnection") ?? throw new InvalidOperationException("Connection string 'sqlconnection' not found.")));
-
-
+builder.AddNpgsqlDbContext<CatalogDbContext>("CatalogDB");
 var app = builder.Build();
 
 app.UseDefaultOpenApi();
