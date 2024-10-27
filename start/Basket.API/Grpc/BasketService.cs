@@ -5,7 +5,7 @@ using Grpc.Core;
 
 namespace eShop.Basket.API.Grpc;
 
-public class BasketService(RedisBasketStore basketStore) : Basket.BasketBase
+public class BasketService(MongoBasketStore basketStore) : Basket.BasketBase
 {
     public override async Task<CustomerBasketResponse> GetBasket(GetBasketRequest request, ServerCallContext context)
     {
