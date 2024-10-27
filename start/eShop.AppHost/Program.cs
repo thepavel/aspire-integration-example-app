@@ -3,15 +3,16 @@ var builder = DistributedApplication.CreateBuilder(args);
 // Databases
 
 var basketStore = builder.AddRedis("BasketStore").WithRedisCommander();
+var postgres = builder.AddPostgres("postgres")
+    .WithEnvironment("POSTGRES_DB", "CatalogDB")
+    .WithBindMount("../Catalog.API/Seed", "/docker-entrypoint-initdb.d").WithPgAdmin();
+
+var catalogDB = postgres.AddDatabase("CatalogDB");
 
 // Identity Providers
 
 var idp = builder.AddKeycloakContainer("idp", tag: "23.0")
     .ImportRealms("../Keycloak/data/import");
-
-// DB Manager Apps
-
-builder.AddProject<Projects.Catalog_Data_Manager>("catalog-db-mgr");
 
 // API Apps
 
