@@ -2,12 +2,15 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 // Databases
 
-var basketStore = builder.AddRedis("BasketStore").WithRedisCommander();
 var postgres = builder.AddPostgres("postgres")
     .WithEnvironment("POSTGRES_DB", "CatalogDB")
-    .WithBindMount("../Catalog.API/Seed", "/docker-entrypoint-initdb.d").WithPgAdmin();
-
+    .WithBindMount("../Catalog.API/Seed", "/docker-entrypoint-initdb.d")
+    .WithPgAdmin();
 var catalogDB = postgres.AddDatabase("CatalogDB");
+
+var mongo = builder.AddMongoDB("mongo")
+    .WithMongoExpress()
+    .AddDatabase("BasketDB");
 
 // Identity Providers
 
@@ -16,11 +19,12 @@ var idp = builder.AddKeycloakContainer("idp", tag: "23.0")
 
 // API Apps
 
-var catalogApi = builder.AddProject<Projects.Catalog_API>("catalog-api");
+var catalogApi = builder.AddProject<Projects.Catalog_API>("catalog-api")
+    .WithReference(catalogDB);
 
 var basketApi = builder.AddProject<Projects.Basket_API>("basket-api")
-        .WithReference(basketStore)
-        .WithReference(idp);
+    .WithReference(mongo)
+    .WithReference(idp);
 
 // Apps
 
