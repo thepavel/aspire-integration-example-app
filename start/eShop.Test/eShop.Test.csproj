@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AspireApp.AppHost\AspireApp.AppHost.csproj" />
+    <ProjectReference Include="..\eShop.AppHost\eShop.AppHost.csproj" />
   </ItemGroup>
 
   <ItemGroup>
