@@ -12,6 +12,8 @@ var mongo = builder.AddMongoDB("mongo")
     .WithMongoExpress()
     .AddDatabase("BasketDB");
 
+var redis = builder.AddRedis("redis");
+
 // Identity Providers
 
 var idp = builder.AddKeycloakContainer("idp", tag: "23.0")
@@ -20,7 +22,8 @@ var idp = builder.AddKeycloakContainer("idp", tag: "23.0")
 // API Apps
 
 var catalogApi = builder.AddProject<Projects.Catalog_API>("catalog-api")
-    .WithReference(catalogDB);
+    .WithReference(catalogDB)
+    .WithReference(redis);
 
 var basketApi = builder.AddProject<Projects.Basket_API>("basket-api")
     .WithReference(mongo)
