@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using eShop.Catalog.API;
 using eShop.Catalog.API.Model;
 using eShop.Catalog.Data;
+using eShop.Catalog.API.Extensions;
 
 namespace Microsoft.AspNetCore.Builder;
 
@@ -73,18 +74,22 @@ public static class CatalogApi
         {
             return TypedResults.BadRequest("Id is not valid.");
         }
-
-        var item = await services.DbContext.CatalogItems
-            .Include(ci => ci.CatalogBrand)
-            .AsNoTracking()
-            .SingleOrDefaultAsync(ci => ci.Id == id);
+        var key = $"catalog:items:id:{id}";
+        
+        var item = await services.Cache.GetOrSetAsync(key, async () =>
+            {
+                return await services.DbContext.CatalogItems
+                                .Include(ci => ci.CatalogBrand)
+                                .AsNoTracking()
+                                .SingleOrDefaultAsync(ci => ci.Id == id);
+            });
 
         if (item == null)
         {
             return TypedResults.NotFound();
         }
 
-        item.PictureUri = services.Options.Value.GetPictureUrl(item.Id);
+        item.PictureUri = services.Options.Value.GetPictureUrl(item.Id); //enrich after pulling basic data
 
         return TypedResults.Ok(item);
     }

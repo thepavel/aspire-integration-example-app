@@ -11,6 +11,8 @@ builder.AddApplicationServices();
 builder.Services.AddProblemDetails();
 
 builder.AddNpgsqlDbContext<CatalogDbContext>("CatalogDB");
+builder.AddRedisDistributedCache("cache");
+
 var app = builder.Build();
 
 app.UseDefaultOpenApi();
