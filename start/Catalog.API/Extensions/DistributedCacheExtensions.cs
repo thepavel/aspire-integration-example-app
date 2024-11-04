@@ -16,6 +16,18 @@ public static class DistributedCacheExtensions
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
+
+    private static DistributedCacheEntryOptions CreateNewCacheEntryOptions()
+    {
+        return new DistributedCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(30))
+                    .SetAbsoluteExpiration(TimeSpan.FromHours(1));
+    }
+
+    public static Task SetAsync<T>(this IDistributedCache cache, string key, T value)
+    {
+        return SetAsync(cache, key, value, CreateNewCacheEntryOptions());
+    }
     public static Task SetAsync<T>(this IDistributedCache cache, string key, T value, DistributedCacheEntryOptions options)
     {
         var bytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(value, serializerOptions));
@@ -36,15 +48,13 @@ public static class DistributedCacheExtensions
 
     public static async Task<T?> GetOrSetAsync<T>(this IDistributedCache cache, string key, Func<Task<T>> task, DistributedCacheEntryOptions? options = null)
     {
-        options ??= new DistributedCacheEntryOptions()
-            .SetSlidingExpiration(TimeSpan.FromMinutes(30))
-            .SetAbsoluteExpiration(TimeSpan.FromHours(1));
+        options ??= CreateNewCacheEntryOptions();
 
         if (cache.TryGetValue(key, out T? value) && value is not null)
         {
             return value;
         }
-        
+
         value = await task();
         if (value is not null)
         {
