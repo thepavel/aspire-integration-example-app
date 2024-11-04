@@ -7,6 +7,7 @@ builder.AddServiceDefaults();
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
 builder.AddApplicationServices();
+builder.AddRedisOutputCache("redis");
 
 var app = builder.Build();
 
@@ -29,5 +30,7 @@ app.MapDefaultEndpoints();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 app.MapForwarder("/product-images/{id}", "http://catalog-api", "/api/v1/catalog/items/{id}/pic");
+
+app.UseOutputCache();
 
 app.Run();
