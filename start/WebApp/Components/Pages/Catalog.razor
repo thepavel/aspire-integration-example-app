@@ -1,6 +1,7 @@
 ﻿@page "/"
 
 @attribute [StreamRendering]
+@attribute [Microsoft.AspNetCore.OutputCaching.OutputCache(Duration = 10)]
 @inject NavigationManager Nav
 @inject CatalogService CatalogService
 
