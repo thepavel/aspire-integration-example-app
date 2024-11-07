@@ -10,7 +10,6 @@ builder.AddApplicationServices();
 
 var app = builder.Build();
 app.UseOutputCache();
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

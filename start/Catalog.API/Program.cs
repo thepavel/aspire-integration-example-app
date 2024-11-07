@@ -1,7 +1,7 @@
 ﻿using eShop.Catalog.API;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.AddRedisDistributedCache("cache");
 builder.AddServiceDefaults();
 builder.AddDefaultOpenApi();
 builder.AddApplicationServices();
